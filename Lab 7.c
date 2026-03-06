@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 //contact structure
 typedef struct contact{
@@ -19,11 +20,14 @@ void addFriend(cont **,int *);
 void deleteFriend(cont *,int *);
 void showPhonebook(cont *,int);
 void sortAlphabetically();
-void findPhoneNumber();
-void randomFriend();
+void findPhoneNumber(cont *,int);
+void randomFriend(cont *,int);
 void deleteAll();
 
 int main(){
+	//seeds the rand() function with the current time
+	srand(time(NULL));
+	
 	int iUserInput=0;//creates a variable for the value the user chooses
 	int iSize=0;//creates a variable for the size of phonebook array
 	cont *phonebook=NULL;//creates a NULL pointer to an array with cont elements
@@ -34,10 +38,10 @@ int main(){
 		printf("\nPhone Book Application");
 		printf("\n\t1) Add friend");
 		printf("\n\t2) Delete friend");
-		printf("\n\t3) Show phone book\n");
-		printf("\n\t4) Sort alphabetically\n");
-		printf("\n\t5) Find phone number\n");
-		printf("\n\t6) Randomly find friend\n");
+		printf("\n\t3) Show phone book");
+		printf("\n\t4) Sort alphabetically");
+		printf("\n\t5) Find phone number");
+		printf("\n\t6) Randomly find friend");
 		printf("\n\t7) Delete all friends\n");
 		
 		//asks and takes an input from the user
@@ -63,6 +67,26 @@ int main(){
 		//calls the showPhonebook() function if the user enters 3
 		else if(iUserInput==3){
 			showPhonebook(phonebook,iSize);
+		}//end else if
+		
+		//
+		else if(iUserInput==4){
+			//
+		}//end else if
+		
+		//call the findPhoneNumber() function if the user enters 5
+		else if(iUserInput==5){
+			findPhoneNumber(phonebook,iSize);
+		}//end else if
+		
+		//
+		else if(iUserInput==6){
+			randomFriend(phonebook,iSize);
+		}//end else if
+		
+		//
+		else if(iUserInput==7){
+			//
 		}//end else if
 	}//end while loop
 	free(phonebook);//frees the memory used in the phonebook array
@@ -106,7 +130,7 @@ void deleteFriend(cont *phbk,int *s){
 	printf("Last name: ");
 	scanf("%49s",lname);
 	
-	//runs a for loop up to iSize
+	//runs a for loop up to s
 	for(int i=0;i<*s;i++){
 		//checks if the the name the user enters is equal to a name in the phonebook array
 		if(strcmp(phbk[i].fname,fname)==0 && strcmp(phbk[i].lname,lname)==0){
@@ -132,3 +156,42 @@ void showPhonebook(cont *phbk,int s){
 		printf("%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
 	}//end for loop
 }//end showPhonebook()
+
+//function definition for the find phone number option
+void findPhoneNumber(cont *phbk,int s){
+	//creates a variable for the phone number
+	char phoneNum[9];
+	
+	//gets the phone number
+	printf("Phone number: ");
+	scanf("%8s",phoneNum);
+	
+	//runs a for loop up to s
+	for(int i=0;i<s;i++){
+		//checks if the the phone number the user enters is equal to a phone number in the phonebook array
+		if(strcmp(phbk[i].phoneNum,phoneNum)==0 && strcmp(phbk[i].phoneNum,phoneNum)==0){
+			printf("%s %s\n",phbk[i].fname,phbk[i].lname);
+			return;
+		}//end if
+	}//end for loop
+	printf("Phone number not found\n");//runs if the phone number the user enters is not equal to any phone number in the phonebook array
+}//end findPhoneNumber()
+
+//function definition for the random friend option
+void randomFriend(cont *phbk,int s){
+	int randomVal=rand()%s;//creates a random variable
+	
+	//runs a for loop up to s
+	for(int i;i<s;i++){
+		//checks when i is equal to the random value
+		if(i==randomVal){
+			printf("%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
+			return;
+		}//end if
+	}//end for loop
+}//end randomFriend()
+
+//function definition for the delete all option
+void deleteAll(){
+	//
+}
