@@ -19,10 +19,10 @@ typedef struct contact{
 void addFriend(cont **,int *);
 void deleteFriend(cont *,int *);
 void showPhonebook(cont *,int);
-void sortAlphabetically();
+void sortAlphabetically(cont *,int);
 void findPhoneNumber(cont *,int);
 void randomFriend(cont *,int);
-void deleteAll();
+void deleteAll(cont *,int *);
 
 int main(){
 	//seeds the rand() function with the current time
@@ -48,7 +48,7 @@ int main(){
 		printf("\nWhat do you want to do: ");
 		scanf("%d",&iUserInput);
 		
-		//uses a while loop to ensure the user only enter a number 1-3
+		//uses a while loop to ensure the user only enter a number 1-7
 		while(!(iUserInput>=1 && iUserInput<=7)){
 			printf("Please enter a value 1-7: ");
 			scanf("%d",&iUserInput);
@@ -69,24 +69,24 @@ int main(){
 			showPhonebook(phonebook,iSize);
 		}//end else if
 		
-		//
+		//calls the sortAlphabetically() function if the user enters 4
 		else if(iUserInput==4){
-			//
+			sortAlphabetically(phonebook,iSize);
 		}//end else if
 		
-		//call the findPhoneNumber() function if the user enters 5
+		//calls the findPhoneNumber() function if the user enters 5
 		else if(iUserInput==5){
 			findPhoneNumber(phonebook,iSize);
 		}//end else if
 		
-		//
+		//calls the randomFriend() function if the user enters 6
 		else if(iUserInput==6){
 			randomFriend(phonebook,iSize);
 		}//end else if
 		
-		//
+		//calls the deleteAll() function if the user enters 7
 		else if(iUserInput==7){
-			//
+			deleteAll(phonebook,&iSize);
 		}//end else if
 	}//end while loop
 	free(phonebook);//frees the memory used in the phonebook array
@@ -157,6 +157,53 @@ void showPhonebook(cont *phbk,int s){
 	}//end for loop
 }//end showPhonebook()
 
+//function definition for the sort alphabetically option
+void sortAlphabetically(cont *phbk,int s){
+	int iFirstOrLast=0;
+	printf("\n1) Sort by first name");
+	printf("\n2) Sort by last name");
+	printf("\nWhat do you want to do: ");
+	
+	scanf("%d",&iFirstOrLast);
+	
+	//uses a while loop to ensure the user only enter a number 1-2
+	while(!(iFirstOrLast>=1 && iFirstOrLast<=2)){
+		printf("Please enter a value 1-2: ");
+		scanf("%d",&iFirstOrLast);
+	}//end while loop
+	
+	cont temp;
+	if(iFirstOrLast==1){
+		//runs a for loop up to s
+		for(int i=0;i<s;i++){
+			//runs another for loop up to s
+			for(int k=i;k<s;k++){
+				//checks if i is less than k and sorts based off the result
+				if(strcmp(phbk[i].fname,phbk[k].fname)>0){
+					temp=phbk[i];
+					phbk[i]=phbk[k];
+					phbk[k]=temp;
+				}//end if
+			}//end for loop
+		}//end for loop
+	}//end if
+	
+	else if (iFirstOrLast==2){
+		//runs a for loop up to s
+		for(int i=0;i<s;i++){
+			//runs another for loop up to s
+			for(int k=i;k<s;k++){
+				//checks if i is less than k and sorts based off the result
+				if(strcmp(phbk[i].lname,phbk[k].lname)>0){
+					temp=phbk[i];
+					phbk[i]=phbk[k];
+					phbk[k]=temp;
+				}//end if
+			}//end for loop
+		}//end for loop		
+	}//end else if
+}//end sortAlphabetically()
+
 //function definition for the find phone number option
 void findPhoneNumber(cont *phbk,int s){
 	//creates a variable for the phone number
@@ -192,6 +239,6 @@ void randomFriend(cont *phbk,int s){
 }//end randomFriend()
 
 //function definition for the delete all option
-void deleteAll(){
+void deleteAll(cont *phbk,int *s){
 	//
 }
