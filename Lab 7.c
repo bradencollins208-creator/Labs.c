@@ -1,7 +1,7 @@
 //Braden Collins
 //Lab 7 Assignment: phonebook2
 //Lab Section: Online
-//date
+//3-12-26
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +22,7 @@ void showPhonebook(cont *,int);
 void sortAlphabetically(cont *,int);
 void findPhoneNumber(cont *,int);
 void randomFriend(cont *,int);
-void deleteAll(cont *,int *);
+void deleteAll(cont **,int *);
 
 int main(){
 	//seeds the rand() function with the current time
@@ -159,6 +159,12 @@ void showPhonebook(cont *phbk,int s){
 
 //function definition for the sort alphabetically option
 void sortAlphabetically(cont *phbk,int s){
+	//checks if the phonebook is empty
+	if(s==0){
+		printf("Phonebook is empty\n");
+		return;
+	}
+	
 	int iFirstOrLast=0;
 	printf("\n1) Sort by first name");
 	printf("\n2) Sort by last name");
@@ -202,6 +208,8 @@ void sortAlphabetically(cont *phbk,int s){
 			}//end for loop
 		}//end for loop		
 	}//end else if
+	printf("Phonebook sorted\n");
+	
 }//end sortAlphabetically()
 
 //function definition for the find phone number option
@@ -216,7 +224,7 @@ void findPhoneNumber(cont *phbk,int s){
 	//runs a for loop up to s
 	for(int i=0;i<s;i++){
 		//checks if the the phone number the user enters is equal to a phone number in the phonebook array
-		if(strcmp(phbk[i].phoneNum,phoneNum)==0 && strcmp(phbk[i].phoneNum,phoneNum)==0){
+		if(strcmp(phbk[i].phoneNum,phoneNum)==0){
 			printf("%s %s\n",phbk[i].fname,phbk[i].lname);
 			return;
 		}//end if
@@ -226,19 +234,25 @@ void findPhoneNumber(cont *phbk,int s){
 
 //function definition for the random friend option
 void randomFriend(cont *phbk,int s){
-	int randomVal=rand()%s;//creates a random variable
+	//checks if the phonebook is empty
+	if(s==0){
+		printf("Phonebook is empty\n");
+		return;
+	}//end if
 	
-	//runs a for loop up to s
-	for(int i;i<s;i++){
-		//checks when i is equal to the random value
-		if(i==randomVal){
-			printf("%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
-			return;
-		}//end if
-	}//end for loop
+	//runs if the phonebook is not empty
+	else{
+		int randomVal=rand()%s;//creates a random variable
+		
+		printf("%s %s %s\n",phbk[randomVal].fname,phbk[randomVal].lname,phbk[randomVal].phoneNum);
+		return;
+	}//end else
 }//end randomFriend()
 
 //function definition for the delete all option
-void deleteAll(cont *phbk,int *s){
-	//
-}
+void deleteAll(cont **phbk,int *s){
+	free(*phbk);//frees the memory used in the phonebook
+	*phbk=NULL;//sets the phonebook to NULL
+	*s=0;//sets to the size of the phonebook to 0
+	printf("All records deleted");
+}//end deleteAll()
