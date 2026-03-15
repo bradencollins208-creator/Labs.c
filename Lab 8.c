@@ -23,6 +23,8 @@ void sortAlphabetically(cont *,int);
 void findPhoneNumber(cont *,int);
 void randomFriend(cont *,int);
 void deleteAll(cont **,int *);
+void storeEntires(cont *,int);
+void retriveEntires(cont *,int);
 
 int main(){
 	//seeds the rand() function with the current time
@@ -89,11 +91,11 @@ int main(){
 		
 		//calls the deleteAll() function if the user enters 7
 		else if(iUserInput==7){
-			deleteAll(phonebook,&iSize);
+			deleteAll(&phonebook,&iSize);
 		}//end else if
 		
 		else if(iUserInput==8){
-			//
+			storeEntires(phonebook,iSize);
 		}//end else if
 		
 		else if(iUserInput==9){
@@ -269,5 +271,45 @@ void deleteAll(cont **phbk,int *s){
 	free(*phbk);//frees the memory used in the phonebook
 	*phbk=NULL;//sets the phonebook to NULL
 	*s=0;//sets to the size of the phonebook to 0
-	printf("All records deleted");
+	printf("All records deleted\n");
 }//end deleteAll()
+
+//function definition for the store entries option
+void storeEntires(cont *phbk,int s){
+	int iChoice=0;
+	
+	printf("1) Default file-name\n");
+	printf("2) Custom file-name\n");
+	printf("What do you want to do: ");
+	
+	scanf("%d",&iChoice);
+	
+	//uses a while loop to ensure the user only enter a number 1-2
+	while(!(iChoice>=1 && iChoice<=2)){
+		printf("Please enter a value 1-2: ");
+		scanf("%d",&iChoice);
+	}//end while loop
+	
+	if(iChoice==1){
+		FILE *pWrite;
+		char text[110];
+		
+		pWrite=fopen("phonebook.txt","w");
+		if(pWrite==NULL){
+			printf("Error: File cannot be opened\n");
+			//return 1;
+		}//end if
+		else{
+			for(int i=0;i<s;i++){
+				fprintf(pWrite,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
+			}//end for loop
+			printf("Entries added\n");
+		}//end else
+		fclose(pWrite);
+	}//end if
+}//end storeEntries()
+
+//function definition for the retrive entires option
+void retriveEntires(cont *phbk,int s){
+	//
+}//end retriveEntires()
