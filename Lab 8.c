@@ -26,6 +26,8 @@ void deleteAll(cont **,int *);
 void storeEntires(cont *,int);
 void retriveEntires(cont *,int);
 
+char gFileName[50];
+
 int main(){
 	//seeds the rand() function with the current time
 	srand(time(NULL));
@@ -99,7 +101,7 @@ int main(){
 		}//end else if
 		
 		else if(iUserInput==9){
-			//
+			retriveEntires(phonebook,iSize);
 		}//end else if
 		
 		else if(iUserInput==0){
@@ -291,25 +293,46 @@ void storeEntires(cont *phbk,int s){
 	}//end while loop
 	
 	if(iChoice==1){
-		FILE *pWrite;
-		char text[110];
-		
-		pWrite=fopen("phonebook.txt","w");
-		if(pWrite==NULL){
-			printf("Error: File cannot be opened\n");
-			//return 1;
-		}//end if
-		else{
-			for(int i=0;i<s;i++){
-				fprintf(pWrite,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
-			}//end for loop
-			printf("Entries added\n");
-		}//end else
-		fclose(pWrite);
+		gFileName[50]="phonebook.txt";
 	}//end if
+	else if(iChoice==2){
+		printf("Enter file-name (please include \".txt\"): ");
+		scanf("%s",gFileName);
+	}//end else if
+	
+	FILE *pAppend;
+	
+	pAppend=fopen("phonebook.txt","a");
+	if(pAppend==NULL){
+		printf("Error: File cannot be opened\n");
+	}//end if
+	else{
+		for(int i=0;i<s;i++){
+			fprintf(pAppend,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
+		}//end for loop
+		printf("Entries added\n");
+	}//end else
+	fclose(pAppend);
 }//end storeEntries()
 
 //function definition for the retrive entires option
 void retriveEntires(cont *phbk,int s){
-	//
+	FILE *pRead;
+	char text[110];
+	
+	pRead=fopen("phonebook.txt","r");
+	if(pRead==NULL){
+		printf("Error: File cannot be opened\n");
+	}//end if
+	else{
+		printf("passed else");
+		for(int i=0;i<10;i++){
+			printf("passed for %d",i);
+			while(fscanf(pRead,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum)!=EOF){
+				printf("passed while");
+				printf("%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
+			}//end while loop
+		}//end for loop
+	}//end else
+	
 }//end retriveEntires()
