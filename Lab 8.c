@@ -24,8 +24,9 @@ void findPhoneNumber(cont *,int);
 void randomFriend(cont *,int);
 void deleteAll(cont **,int *);
 void storeEntires(cont *,int);
-void retriveEntires(cont *,int);
+void retrieveEntires(cont **,int *);
 
+//creates a global variable for the file name used for storing/retrieving files
 char gFileName[50];
 
 int main(){
@@ -96,14 +97,17 @@ int main(){
 			deleteAll(&phonebook,&iSize);
 		}//end else if
 		
+		//calls the storeEntries() function if the user enters 8
 		else if(iUserInput==8){
 			storeEntires(phonebook,iSize);
 		}//end else if
 		
+		//calls the retrieveEntries() function if the user enters 9
 		else if(iUserInput==9){
-			retriveEntires(phonebook,iSize);
+			retrieveEntires(&phonebook,&iSize);
 		}//end else if
 		
+		//ends the while loop if the user enters 0
 		else if(iUserInput==0){
 			break;
 		}//end else if
@@ -278,8 +282,9 @@ void deleteAll(cont **phbk,int *s){
 
 //function definition for the store entries option
 void storeEntires(cont *phbk,int s){
-	int iChoice=0;
+	int iChoice=0;//creates a variable
 	
+	//allows the user to choose to store the entries in a default file name or a custom file name
 	printf("1) Default file-name\n");
 	printf("2) Custom file-name\n");
 	printf("What do you want to do: ");
@@ -292,47 +297,92 @@ void storeEntires(cont *phbk,int s){
 		scanf("%d",&iChoice);
 	}//end while loop
 	
+	//if the user chooses 1, the global file name is set to "phonebook.txt"
 	if(iChoice==1){
-		gFileName[50]="phonebook.txt";
+		strcpy(gFileName,"phonebook.txt");
 	}//end if
+	//if the user chooses 2, the global file name is set to what the user enters
 	else if(iChoice==2){
 		printf("Enter file-name (please include \".txt\"): ");
-		scanf("%s",gFileName);
+		scanf("%49s",gFileName);
 	}//end else if
 	
-	FILE *pAppend;
+	FILE *pWrite;//creates a file pointer
 	
-	pAppend=fopen("phonebook.txt","a");
-	if(pAppend==NULL){
+	//opens a file in write mode
+	pWrite=fopen(gFileName,"w");
+	
+	//if the file pointer is NULL, prints an error
+	if(pWrite==NULL){
 		printf("Error: File cannot be opened\n");
 	}//end if
-	else{
-		for(int i=0;i<s;i++){
-			fprintf(pAppend,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
-		}//end for loop
-		printf("Entries added\n");
-	}//end else
-	fclose(pAppend);
+	
+	//uses a for loop up to the size of phonebook and prints each phonebook entry on a new line of the text file
+	for(int i=0;i<s;i++){
+		fprintf(pWrite,"%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
+	}//end for loop
+	printf("Entries added\n");//tells the user the entries have been added to the file
+	
+	fclose(pWrite);//closes the file pointer
 }//end storeEntries()
 
 //function definition for the retrive entires option
-void retriveEntires(cont *phbk,int s){
-	FILE *pRead;
-	char text[110];
+void retrieveEntires(cont **phbk,int *s){
+	int iChoice=0;//creates a variable
 	
-	pRead=fopen("phonebook.txt","r");
+	//allows the user to choose to store the entries in a default file name or a custom file name
+	printf("1) Default file-name\n");
+	printf("2) Custom file-name\n");
+	printf("What do you want to do: ");
+	
+	scanf("%d",&iChoice);
+	
+	//uses a while loop to ensure the user only enter a number 1-2
+	while(!(iChoice>=1 && iChoice<=2)){
+		printf("Please enter a value 1-2: ");
+		scanf("%d",&iChoice);
+	}//end while loop
+	
+	//if the user chooses 1, the global file name is set to "phonebook.txt"
+	if(iChoice==1){
+		strcpy(gFileName,"phonebook.txt");
+	}//end if
+	//if the user chooses 2, the global file name is set to what the user enters
+	else if(iChoice==2){
+		printf("Enter file-name (please include \".txt\"): ");
+		scanf("%49s",gFileName);
+	}//end else if
+	
+	FILE *pRead;//creates a file pointer
+	
+	//opens a file in read mode
+	pRead=fopen(gFileName,"r");
+	
+	//if the file pointer is NULL, prints an error
 	if(pRead==NULL){
 		printf("Error: File cannot be opened\n");
 	}//end if
-	else{
-		printf("passed else");
-		for(int i=0;i<10;i++){
-			printf("passed for %d",i);
-			while(fscanf(pRead,"%s %s %s",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum)!=EOF){
-				printf("passed while");
-				printf("%s %s %s\n",phbk[i].fname,phbk[i].lname,phbk[i].phoneNum);
-			}//end while loop
-		}//end for loop
-	}//end else
 	
-}//end retriveEntires()
+	//creates a temporary cont variable
+	cont temp;
+	
+	//uses a while loop to go through the file
+	while(fscanf(pRead,"%49s %49s %9s",temp.fname,temp.lname,temp.phoneNum)==3){
+		
+		//allcoates memory as necessay
+		*phbk=realloc(*phbk,(*s+1) * sizeof(cont));
+		
+		//checks that the memory was properly allocated (exits if failed)
+		if(*phbk==NULL){
+			printf("Memory allocation failed\n");
+			exit(1);
+		}//end if
+		
+		//sets the phonebook element s equal to the temp value
+		(*phbk)[*s]=temp;
+		(*s)++;//increases the size of the phonebook
+	}//end while loop
+	
+	fclose(pRead);//closes the file pointer
+	printf("Entries retrieved\n");//tells the user the entries have been retrieved
+}//end retrieveEntires()
