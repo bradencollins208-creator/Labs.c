@@ -1,7 +1,7 @@
 //Braden Collins
 //Lab 8 Assignment: phonebook3
 //Lab Section: Online
-//date
+//3-20-26
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -362,6 +362,11 @@ void retrieveEntires(cont **phbk,int *s){
 	if(pRead==NULL){
 		printf("Error: File cannot be opened\n");
 	}//end if
+	
+	//resets the phonebook before loading new data
+	free(*phbk);
+	*phbk=NULL;
+	*s=0;
 	
 	//creates a temporary cont variable
 	cont temp;
